@@ -17,6 +17,7 @@
 #include <iostream>
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 #include <queue>
 #include <map>
 using namespace std;
@@ -39,8 +40,10 @@ vector<vector<string>> findLadders(string beginWord, string endWord, vector<stri
     queue<string> q;
     unordered_set<string> visited;
     unordered_set<string> wordSet(wordList.begin(), wordList.end());
+    unordered_map<string, int> dist;
     vector<vector<string>> res;
     map<string, vector<string>> nextWords;
+    
     q.push(beginWord);
     q.push("0");
     visited.insert(beginWord);
@@ -56,14 +59,19 @@ vector<vector<string>> findLadders(string beginWord, string endWord, vector<stri
         }
         for (int i = 0; i < qStr.length(); i++) {
             string word = qStr;
+            int curDist = dist[qStr];
             for (int j = 0; j <= 25; j++) {
                 word[i] = 'a' + j;
-                if (visited.find(word) == visited.end() && wordSet.find(word) != wordSet.end()) {
-                    if (word != endWord) {
+                if (wordSet.find(word) != wordSet.end()) {
+                    if (visited.find(word) == visited.end()) {
                         visited.insert(word);
                         q.push(word);
+                        nextWords[qStr].push_back(word);
+                        dist[word] = curDist + 1;
                     }
-                    nextWords[qStr].push_back(word);
+                    else if (dist[word] > curDist) {
+                        nextWords[qStr].push_back(word);
+                    }
                 }
             }
         }
@@ -84,12 +92,10 @@ vector<vector<string>> findLadders(string beginWord, string endWord, vector<stri
     }
     return res;
 }
+
 int main(int argc, const char * argv[]) {
-//    string a[] = {"hot","dot","dog","lot","log","cog"};
-    string a[] = {"a","b","c"};
-    vector<string> words(a,a+3);
-//    vector<vector<string>> res = findLadders("hit", "cog", words);
-    vector<vector<string>> res = findLadders("a", "c", words);
+    vector<string> words{"ted","tex","red","tax","tad","den","rex","pee"};
+    vector<vector<string>> res = findLadders("red", "tax", words);
     for (int i = 0; i < res.size(); i++) {
         for (int j = 0; j < res[i].size(); j++) {
             cout<<res[i][j]<<" ";
