@@ -12,7 +12,7 @@
 #include <unordered_set>
 using namespace std;
 
-bool wordBreak(string s, vector<string> wordDict){
+bool wordBreak(string s, vector<string>& wordDict) {
     if (wordDict.size() == 0) {
         return false;
     }
@@ -21,7 +21,7 @@ bool wordBreak(string s, vector<string> wordDict){
     //dp[i]==true表示s.substr(0,i-1)可以被完美划分
     dp[0] = true;
     for (int i = 1; i <= s.size(); i++){
-        for (int j = i - 1; j >= 0; j--){
+        for (int j = 0; j < i; j++){
             if (dp[j]){
                 string word = s.substr(j, i-j);
                 if (dict.find(word) != dict.end()){
@@ -33,6 +33,7 @@ bool wordBreak(string s, vector<string> wordDict){
     }
     return dp[s.size()];
 }
+
 int main(int argc, const char * argv[]) {
     string s = "leetcode";
     vector<string> wordDict;

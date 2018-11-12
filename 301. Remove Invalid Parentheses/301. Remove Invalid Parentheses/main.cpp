@@ -100,20 +100,26 @@ vector<string> removeInvalidParentheses(string s) {
     int cnt1 = 0, cnt2 = 0;
     for (char c : s) {
         cnt1 += (c == '(');
-        if (cnt1 == 0)
-            cnt2 += (c == ')'); // no previous unmatched '(', so when it sees a ')', cnt2++
-        else
-            cnt1 -= (c == ')'); // there is previous unmatched '(', so when it sees a ')', cnt1--
+        if (c == ')') {
+            if (cnt1 != 0) {
+                cnt1 -= 1;
+            }
+            else {
+                cnt2 += 1;
+            }
+        }
     }
-    // cout<<cnt1<<" "<<cnt2<<endl;
-    // cnt1 and cnt2 records the number of unmatched brackets
+     cout<<cnt1<<" "<<cnt2<<endl;
+    // initially, cnt1 and cnt2 records the number of unmatched brackets
+    // however, for every iteration of helper, cnt1 and cnt2 might not represent in this way
+    // every time cnt-1, we do not know if the bracket we skipped can reduce the unmatched brackets. Sometime we are might removing the right ones.
     helper(s, 0, cnt1, cnt2, res);
     return res;
 }
 
 
 int main(int argc, const char * argv[]) {
-    vector<string> res = removeInvalidParentheses("))()((");
+    vector<string> res = removeInvalidParentheses("()())(");
     for (auto s : res) {
         cout<<s<<endl;
     }
