@@ -6,6 +6,7 @@ int numDecodings(string s){
 	if (s.empty() || (s.size() > 1 && s[0] == '0')) 
 		return 0;
     vector<int> dp(s.size() + 1, 0);
+    // dp[i]: number of decodings of s.substr(0,i)   (not including s[i])
     dp[0] = 1;
     for (int i = 1; i < dp.size(); ++i) {
         dp[i] = (s[i - 1] == '0') ? 0 : dp[i - 1];

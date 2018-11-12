@@ -16,7 +16,7 @@ using namespace std;
  sMap[c]: map recording how many character c appears in substring s[i..j];
  tMap[c]: map recording how many character c appears in string t;
  
- When j points to C, by sMap[s[j]] < tMap[s[j]] && count == t.length (count += 1 after add this char),
+ When j points to C, by seeing sMap[s[j]] < tMap[s[j]] && count == t.length (count += 1 after add this char),
  we have a window which takes j as right bound and it contains all chars in t.
  How to get a shorter window?
  We shift rightwards the pointer i while making ensure sMap[s[i]] >= tMap[s[i]] (to ensure the window is able to cover string t).

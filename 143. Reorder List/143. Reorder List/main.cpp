@@ -60,6 +60,45 @@ void reorderList(ListNode* head) {
  Reverse the second half in place, and then insert the inversed second half into the first half.
  [1,2,3,4,5,6] -> [1,2,3],[4,5,6] -> [1,2,3],[6,5,4] -> [1,6,2,5,3,4]
  */
+
+void reorderList(ListNode *head) {
+    if (!head || !head->next) return;
+    
+    // find the middle node: O(n)
+    ListNode *p1 = head, *p2 = head->next;
+    while (p2 && p2->next) {
+        p1 = p1->next;
+        p2 = p2->next->next;
+    }
+    
+    // cut from the middle and reverse the second half: O(n)
+    ListNode *head2 = p1->next;
+    p1->next = NULL;
+    
+    p2 = head2->next;
+    head2->next = NULL;
+    while (p2) {
+        p1 = p2->next;
+        p2->next = head2;
+        head2 = p2;
+        p2 = p1;
+    }
+    
+    // merge two lists: O(n)
+    for (p1 = head, p2 = head2; p1; ) {
+        auto t = p1->next;
+        p1 = p1->next = p2;
+        p2 = t;
+    }
+    
+    //for (p1 = head, p2 = head2; p2; ) {
+    //    auto t = p1->next;
+    //    p1->next = p2;
+    //    p2 = p2->next;
+    //    p1 = p1->next->next = t;
+    //}
+}
+
 int main(int argc, const char * argv[]) {
     ListNode* head = new ListNode(1);
     insertListNode(head);

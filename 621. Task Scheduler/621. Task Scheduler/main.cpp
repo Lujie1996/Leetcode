@@ -1,4 +1,4 @@
-//
+ //
 //  main.cpp
 //  621. Task Scheduler
 //
@@ -66,6 +66,8 @@ using namespace std;
 //    while (q.size() <= n) {
 //        q.push(-1);
 //    }
+//    // q stores the hwo many left to do for the most popular n tasks. (if less than n, use -1 to denote idle time slot)
+//    // tasksToEnQ stores the number of tasks remaining, also thery are sorted (max heap)
 //    int count = 0, res = 0;
 //    while (count < tasks.size()) {
 //        int front = q.front();
@@ -105,7 +107,7 @@ using namespace std;
 // From Discuss. Very concise.
 int leastInterval(vector<char>& tasks, int n) {
     unordered_map<char,int> mp;
-    int count = 0;
+    int count = 0; // count the number of task which appears for the most times
     for (auto e : tasks)
     {
         mp[e]++;

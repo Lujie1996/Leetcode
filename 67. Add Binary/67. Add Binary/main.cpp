@@ -29,6 +29,23 @@ string addBinary(string a, string b) {
     }
     return res;
 }
+// 2018/11/5
+string addBinary(string a, string b) {
+    string res = "";
+    int i = a.size()-1, j = b.size()-1, flag = 0;
+    while (i >= 0 || j >= 0 || flag) {
+        int x = i >= 0 ? a[i] - '0' : 0;
+        int y = j >= 0 ? b[j] - '0' : 0;
+        int sum = x + y + flag;
+        flag = sum > 1 ? 1 : 0;
+        sum %= 2;
+        res = to_string(sum) + res;
+        i--;
+        j--;
+    }
+    return res;
+}
+
 int main(int argc, const char * argv[]) {
     cout<<addBinary("1111", "1111")<<endl;
     return 0;

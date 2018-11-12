@@ -22,45 +22,34 @@ using namespace std;
  }
  */
 
-find the longest ajacent
+int tryOneSide(unordered_set<int>& hash, int pos, int bias) {
+    int t = pos, count = 0;
+    while (true) {
+        t += bias;
+        if (hash.find(t) != hash.end()) {
+            count += 1;
+            hash.erase(t);
+        }
+        else
+            break;
+    }
+    return count;
+}
+
 int longestConsecutive(vector<int>& nums) {
     if (nums.size() == 0) {
         return 0;
     }
-    
     unordered_set<int> hash(nums.begin(), nums.end());
-    int bias, t, count, maxLen;
-    maxLen = INT_MIN;
+    
+    int maxLen = INT_MIN;
     for (int num : hash) {
-        if (hash.find(num) == hash.end()) {
-            continue;
-        }
-        bias = count = 1;
-        while (true) {
-            t = num + bias;
-            if (hash.find(t) != hash.end()) {
-                count += 1;
-                bias += 1;
-                hash.erase(t);
-            }
-            else
-                break;
-        }
-        bias = 1;
-        while (true) {
-            t = num - bias;
-            if (hash.find(t) != hash.end()) {
-                count += 1;
-                bias += 1;
-                hash.erase(t);
-            }
-            else
-                break;
-        }
-        maxLen = count > maxLen ? count : maxLen;
+        int count = tryOneSide(hash, num, 1) + tryOneSide(hash, num, -1) + 1;
+        maxLen = max(maxLen, count);
     }
     return maxLen;
 }
+
 int main(int argc, const char * argv[]) {
     int a[] = {100, 4, 200, 1, 3, 2};
     vector<int> nums(a,a+6);

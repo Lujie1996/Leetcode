@@ -78,11 +78,11 @@ string multiply(string num1, string num2) {
         }
     }
     
-    string sb;
+    string res;
     for (int p : pos)
-        if (!(sb.size() == 0 && p == 0))
-            sb += p;
-    return sb.size() == 0 ? "0" : sb;
+        if (!(res.size() == 0 && p == 0))
+            res += p;
+    return res.size() == 0 ? "0" : res;
 }
 int main(int argc, const char * argv[]) {
     string num1 = "44565656131244", num2 = "3322232221231233";

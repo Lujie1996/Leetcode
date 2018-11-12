@@ -39,6 +39,30 @@ int minMeetingRooms(vector<Interval>& intervals) {
     }
     return res;
 }
+
+// 2018/11/5
+int minMeetingRooms(vector<Interval>& intervals) {
+    sort(intervals.begin(), intervals.end(), [](const Interval& a, const Interval& b) {return a.start <= b.start;});
+    int res = 0, count = 0;
+    vector<bool> arranged(intervals.size(), false);
+    while (count < intervals.size()) {
+        int lastEnd = -1;
+        for (int i = 0; i < intervals.size(); i++) {
+            if (arranged[i]) {
+                continue;
+            }
+            else {
+                if (intervals[i].start >= lastEnd) {
+                    arranged[i] = true;
+                    lastEnd = intervals[i].end;
+                    count += 1;
+                }
+            }
+        }
+        res += 1;
+    }
+    return res;
+}
 int main(int argc, const char * argv[]) {
     // [0, 30],[5, 10],[15, 20]
     Interval a(0,30), b(5,10), c(15,20);

@@ -43,7 +43,8 @@ void showTree(TreeNode* root){//preorder
 }
 //从上往下的判断；向左孩子看，root影响最大值；向右孩子看，root影响最小值。可以写一个BST然后把每个节点的取值范围写出来，观察出规律
 //bool isValidBST(TreeNode* root, TreeNode* minNode, TreeNode* maxNode) {
-//    if(!root) return true;
+//    if(!root)
+//        return true;
 //    if((minNode && root->val <= minNode->val) || (maxNode && root->val >= maxNode->val))
 //        return false;
 //    return isValidBST(root->left, minNode, root) && isValidBST(root->right, root, maxNode);
@@ -64,7 +65,8 @@ bool isValidBST(TreeNode* root) {
         }
         root = st.top();
         st.pop();
-        if(pre != NULL && root->val <= pre->val) return false;
+        if(pre != NULL && root->val <= pre->val)
+            return false;
         pre = root;
         root = root->right;
     }

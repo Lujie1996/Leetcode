@@ -65,7 +65,7 @@ bool isMatch(string text, string pattern) {
             if (j + 1 < pattern.length() && pattern[j+1] == '*'){
                 dp[i][j] = dp[i][j+2] || (first_match && dp[i+1][j]);
                 // dp[i][j] = dp[i][j+2]: pass over X*
-                // first_match && dp[i+1][j]: s[i] matches p[j] and try s[i+1:] match with p[j]
+                // first_match && dp[i+1][j]: s[i] matches p[j] and try s[i+1:] match with p[j:]
             }
             else {
                 dp[i][j] = first_match && dp[i+1][j+1];

@@ -29,6 +29,11 @@ bool isValid(string& s) {
 }
 
 // BFS solution. Tries so many possibilities, therefore not very efficient. Beats 25%.
+// Strings with the same length are regarded as in the same layer.
+// At first, try to delete one char in s and push those strings into queue.
+// In every iteration, pop a string from queue and check if parenthesis match. If so, record the resLen which is the longest possible length.
+// Keep poping string until the poped string is shorter than resLen.
+
 //vector<string> removeInvalidParentheses(string s) {
 //    queue<string> q;
 //    q.push(s);
@@ -70,7 +75,7 @@ bool isValid(string& s) {
 //}
 
 
-// iterative solution
+// iterative solution. Beats 80%
 void helper(string s, int start, int cnt1, int cnt2, vector<string>& res) {
     if (cnt1 == 0 && cnt2 == 0) {
         if (isValid(s))
@@ -96,19 +101,19 @@ vector<string> removeInvalidParentheses(string s) {
     for (char c : s) {
         cnt1 += (c == '(');
         if (cnt1 == 0)
-            cnt2 += (c == ')');
+            cnt2 += (c == ')'); // no previous unmatched '(', so when it sees a ')', cnt2++
         else
-            cnt1 -= (c == ')');
+            cnt1 -= (c == ')'); // there is previous unmatched '(', so when it sees a ')', cnt1--
     }
-    // cnt1 and cnt2 records the relative values of count'(' and count')'
-    // that is, cnt1 and cnt2 must have at least one that is 0
+    // cout<<cnt1<<" "<<cnt2<<endl;
+    // cnt1 and cnt2 records the number of unmatched brackets
     helper(s, 0, cnt1, cnt2, res);
     return res;
 }
 
 
 int main(int argc, const char * argv[]) {
-    vector<string> res = removeInvalidParentheses("()())()");
+    vector<string> res = removeInvalidParentheses("))()((");
     for (auto s : res) {
         cout<<s<<endl;
     }
