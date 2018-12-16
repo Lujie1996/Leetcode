@@ -40,9 +40,6 @@ int quickSortPartition(vector<int>& nums, int start, int end) {
     return low;
 }
 int findInRange(vector<int>& nums, int k, int start, int end) {
-    if (start == end) {
-        return nums[start];
-    }
     int pivotIndex = quickSortPartition(nums, start, end);
     int pivotRank = end - pivotIndex + 1;
     if (pivotRank == k) {
@@ -59,7 +56,12 @@ int findKthLargest(vector<int>& nums, int k) {
     return findInRange(nums, k, 0, (int)nums.size()-1);
 }
 int main(int argc, const char * argv[]) {
-    vector<int> nums{2,1};
-    cout<<findKthLargest(nums, 2)<<endl;
+//    vector<int> nums{2,1};
+//    cout<<findKthLargest(nums, 2)<<endl;
+    
+//    vector<int> nums{3,3,4,5,3,1,2,3};
+    vector<int> nums{5,4,3,2,1};
+    cout<<quickSortPartition(nums, 0, nums.size()-1)<<endl;
+    printArrary(nums);
     return 0;
 }
