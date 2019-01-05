@@ -10,33 +10,40 @@
 #include <vector>
 using namespace std;
 
-// 问题本质：图是否可以二分。用上色法做。
-bool paintNodeValid(vector<vector<int>>& edges, vector<int>& nodeColor, int node, int colorToPaint) {
+bool paintNodeValid(vector<vector<int>>& graph, vector<int>& nodeColor, int node, int colorToPaint) {
     // unpainted: 0; painted: -1 or 1.
     if (nodeColor[node] != 0) {
-        return nodeColor[node] != colorToPaint;
+        return nodeColor[node] == colorToPaint;
     }
     nodeColor[node] = colorToPaint;
-    for(int i = 0; i < edges[node].size(); i++) {
-        if(!paintNodeValid(edges, nodeColor, edges[node][i], colorToPaint * -1)) {
+    
+    for(auto neighbor : graph[node]) {
+        if(!paintNodeValid(graph, nodeColor, neighbor, colorToPaint * -1)) {
             return false;
         }
     }
     return true;
 }
 bool possibleBipartition(int N, vector<vector<int>>& dislikes) {
-    vector<vector<int>> edges(N+1, vector<int>());
-    vector<int> start{0,1};
-    dislikes.push_back(start);
-    // use a fake node to start the dfs
+    vector<vector<int>> graph(N+1);
+
     for (auto dislike : dislikes) {
-        edges[dislike[0]].push_back(dislike[1]);
+        graph[dislike[0]].push_back(dislike[1]);
+        graph[dislike[1]].push_back(dislike[0]);
+        // IMPORTANT!!!
     }
     vector<int> nodeColor(N+1, 0);
-    return paintNodeValid(edges, nodeColor, 0, 1);
+    for (int i = 1; i < N + 1; i++) {
+        if (nodeColor[i] == 0 && !paintNodeValid(graph, nodeColor, i, 1)) {
+            return false;
+        }
+    }
+    return true;
 }
+
 int main(int argc, const char * argv[]) {
-    vector<vector<int>> dislikes{{1,2},{2,3},{3,4},{4,5},{5,1}};
+//    vector<vector<int>> dislikes{{1,2},{2,3},{3,4},{4,5},{5,1}};
+    vector<vector<int>> dislikes{{1,2},{3,4},{4,5},{3,5}};
     if (possibleBipartition(5, dislikes)) {
         cout<<"true"<<endl;
     }

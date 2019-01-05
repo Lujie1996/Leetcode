@@ -73,33 +73,67 @@ using namespace std;
 //}
 
 // Another more concise DP implementation
+//string longestPalindrome(string s) {
+//    int n = (int)s.size(), longest = 0, start = 0;
+//    if (n < 2) {
+//        return s;
+//    }
+//    vector<vector<bool>> isPalindrome(n, vector<bool>(n));
+//    // isPalindrome[i][j] 表示s[i...j]是否是回文串
+//    for (int i = 0; i < n; i++){  // i作为终点
+//        int j = i;    // j作为起点
+//        while (j >= 0){
+//            if (s[i] == s[j] && (i - j < 2 || isPalindrome[j+1][i-1])){
+//                isPalindrome[j][i] = true;
+//                if (i - j + 1 > longest) {
+//                    start = j;
+//                    longest = i - j + 1;
+//                }
+//            }
+//            j--;
+//        }
+//    }
+//    return s.substr(start, longest);
+//}
+
 string longestPalindrome(string s) {
-    int n = (int)s.size(), longest = 0, start = 0;
-    if (n < 2) {
-        return s;
+    if (s.size() == 0) {
+        return "";
     }
-    vector<vector<bool>> isPalindrome(n, vector<bool>(n));
-    // isPalindrome[i][j] 表示s[i...j]是否是回文串
-    for (int i = 0; i < n; i++){  // i作为终点
-        int j = i;    // j作为起点
-        while (j >= 0){
-            if (s[i] == s[j] && (i - j < 2 || isPalindrome[j+1][i-1])){
-                isPalindrome[j][i] = true;
-                if (i - j + 1 > longest) {
-                    start = j;
-                    longest = i - j + 1;
-                }
-            }
-            j--;
+    
+    int maxLen = 1, startPos = 0;
+    
+    for (int i = 0; i < s.size(); i++) {
+        int j = 1;
+        while (i - j >= 0 && i + j < s.size() && s[i-j] == s[i+j]) {
+            j++;
+        }
+        j--;
+        if (2 * j + 1 > maxLen) {
+            maxLen = 2 * j + 1;
+            startPos = i - j;
         }
     }
-    return s.substr(start, longest);
+    
+    for (int i = 0; i < s.size() - 1; i++) {
+        int j = 1;
+        while (i - j + 1 >= 0 && i + j < s.size() && s[i-j+1] == s[i+j]) {
+            j++;
+        }
+        j--;
+        if (2 * j > maxLen) {
+            maxLen = 2 * j;
+            startPos = i - j + 1;
+        }
+    }
+    
+    return s.substr(startPos, maxLen);
 }
 
 // There is actually a faster solution using Manacher's Algorithm. O(n) time
 
 int main(int argc, const char * argv[]) {
-    string s="abcdzdcab";
+    string s="babad";
     cout<<longestPalindrome(s)<<endl;
     return 0;
 }
