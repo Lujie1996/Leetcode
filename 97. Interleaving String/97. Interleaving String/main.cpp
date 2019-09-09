@@ -24,6 +24,8 @@ bool isInterleave(string s1, string s2, string s3) {
             return false;
         }
         set<vector<int>> next;
+        // iterate all pairs in dp.
+        // for every pair [m,n], see if we can get s3[i] by trying [m+1,n] and [m,n+1]
         for (auto a : dp) {
             int m = a[0], n = a[1];
             if (m + 1 < s1.size() && s1[m+1] == s3[i]) {

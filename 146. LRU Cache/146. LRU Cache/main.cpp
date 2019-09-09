@@ -7,83 +7,48 @@
 //
 
 #include <iostream>
+#include <list>
 #include <unordered_map>
 using namespace std;
 
 class LRUCache {
-public:
-    class Node {
-    public:
-        Node *prev, *next;
-        int key, value;
-        Node(int a, int b, Node* p, Node* q) : key(a), value(b), prev(p), next(q) {}
-    };
-    
 private:
-    unordered_map<int, Node*> cached;
-    Node *dummyHead = new Node(0, 0,NULL,NULL), *lastNode = NULL;
-    int used = 0, capacity = 0;
-    
+    unordered_map<int, list<pair<int,int>>::iterator> keyList;
+    list<pair<int,int>> cache;
+    int capacity_;
 public:
     LRUCache(int capacity) {
-        this->capacity = capacity;
+        capacity_ = capacity;
     }
     
     int get(int key) {
-        if (cached.find(key) == cached.end()) {
+        auto ite = keyList.find(key);
+        // find() returns an iterator
+        if (ite == keyList.end()) {
             return -1;
         }
-        else {
-            Node* node = cached[key];
-            deleteNode(node);
-            insertHead(node);
-            return node->value;
-        }
+        cache.splice(cache.begin(), cache, ite->second);
+        return ite->second->second;
     }
     
     void put(int key, int value) {
-        if (cached.find(key) != cached.end()) {
-            deleteNode(cached[key]);
-        }
-        else if (used >= capacity && lastNode) {
-            Node* preLastNode = preLastNode = lastNode->prev;
-            cached.erase(lastNode->key);
-            deleteNode(lastNode);
-            lastNode = preLastNode;
-        }
-        Node* node = new Node(key, value, lastNode, dummyHead->next);
-        if (dummyHead->next == NULL) {
-            lastNode = node;
-        }
-        insertHead(node);
-        cached[key] = node;
-        used++;
-    }
-    
-    void deleteNode(Node* node) {
-        if (node == NULL) {
+        auto ite = keyList.find(key);
+        if (ite != keyList.end()) {
+            ite->second->second = value;
+            cache.splice(cache.begin(), cache, ite->second);
             return;
         }
-        if (dummyHead->next == node) {
-            lastNode = NULL;
+        
+        if (capacity_ == cache.size()) {
+            auto lastNode = cache.back();
+            // back() returns the reference to that element, not an iterator
+            // begin() and end() are iterator typed.
+            keyList.erase(lastNode.first);
+            cache.pop_back();
         }
-        else {
-            lastNode = node->prev;
-        }
-        Node *next = node->next;
-        node->prev->next = next;
-    }
-    
-    void insertHead(Node* node) {
-        Node* next = dummyHead->next;
-        dummyHead->next = node;
-        if (next)
-            next->prev = node;
-        node->next = next;
-        node->prev = dummyHead;
-        if (lastNode == NULL) {
-            lastNode = node;
-        }
+        
+        cache.emplace_front(key, value);
+        keyList[key] = cache.begin();
     }
 };
 

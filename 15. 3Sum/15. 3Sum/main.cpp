@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <vector>
+#include <set>
 using namespace std;
 
 //vector<vector<int>> threeSum(vector<int>& nums) {
@@ -52,44 +53,78 @@ using namespace std;
 //}
 
 // 2018/11/6
+//vector<vector<int>> threeSum(vector<int>& nums) {
+//    sort(nums.begin(), nums.end());
+//    vector<vector<int>> res;
+//    for (int i = 0; i < nums.size(); i++) {
+//        if (nums[i] > 0) {
+//            break;
+//        }
+//        int target = -nums[i];
+//
+//        int low = i + 1, high = nums.size() - 1;
+//        while (low < high) {
+//            int sum = nums[low] + nums[high];
+//            if (sum == target) {
+//                vector<int> t{nums[i], nums[low], nums[high]};
+//                res.push_back(t);
+//                while (low < high && nums[low] == t[1]) {
+//                    low++;
+//                }
+//                while (low < high && nums[high] == t[2]) {
+//                    high--;
+//                }
+//            }
+//            else if (sum > target){
+//                high--;
+//            }
+//            else {
+//                low++;
+//            }
+//        }
+//        while (i + 1 < nums.size() && nums[i] == nums[i+1]) {
+//            i++;
+//        }
+//    }
+//    return res;
+//}
+
 vector<vector<int>> threeSum(vector<int>& nums) {
+    set<vector<int>> tris;
+    
+    if (nums.size() < 3) {
+        return {};
+    }
+    
     sort(nums.begin(), nums.end());
-    vector<vector<int>> res;
-    for (int i = 0; i < nums.size(); i++) {
-        if (nums[i] > 0) {
+    for (int i = 0; i + 2 < nums.size(); i++) {
+        if (nums[i] + nums[i+1] + nums[i+2] > 0) {
             break;
         }
-        int target = -nums[i];
-        
-        int low = i + 1, high = nums.size() - 1;
-        while (low < high) {
-            int sum = nums[low] + nums[high];
-            if (sum == target) {
-                vector<int> t{nums[i], nums[low], nums[high]};
-                res.push_back(t);
-                while (low < high && nums[low] == t[1]) {
-                    low++;
-                }
-                while (low < high && nums[high] == t[2]) {
-                    high--;
-                }
+        int l = i + 1, r = nums.size() - 1, target = -1 * nums[i];
+        while (l < r) {
+            int sum = nums[l] + nums[r];
+            if (sum > target) {
+                r--;
             }
-            else if (sum > target){
-                high--;
+            else if (sum < target) {
+                l++;
             }
             else {
-                low++;
+                tris.insert({nums[i], nums[l], nums[r]});
+                l++;
             }
         }
-        while (i + 1 < nums.size() && nums[i] == nums[i+1]) {
-            i++;
-        }
     }
+    
+    vector<vector<int>> res(tris.begin(), tris.end());
+    
     return res;
 }
 
 int main(int argc, const char * argv[]) {
     vector<int> nums{-1,0,1,2,-1,-4};
+//    vector<int> nums{-2,0,1,1,2};
     vector<vector<int>> res = threeSum(nums);
     for (auto a : res) {
         for (auto num : a) {
